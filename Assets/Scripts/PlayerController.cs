@@ -4,6 +4,18 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    //Audio source used to play sound effects.
+    public AudioSource soundEffectSource;
+
+    //Sound when picking up stars
+    public AudioClip pickupSound;
+
+    //lose
+    public AudioClip crashSound;
+
+    //win
+    public AudioClip winSound;
+
     // Rigidbody attached to the player.
     private Rigidbody rb;
 
@@ -80,6 +92,10 @@ public class PlayerController : MonoBehaviour
         {
             // Hide the collected pickup.
             other.gameObject.SetActive(false);
+            if (soundEffectSource != null && pickupSound != null)
+                    {
+                        soundEffectSource.PlayOneShot(pickupSound);
+                    }
 
             count++;
 
@@ -102,6 +118,11 @@ public class PlayerController : MonoBehaviour
             if (winText != null)
             {
                 winText.text = "You Win!";
+            }
+
+            if (soundEffectSource != null && winSound!=null)
+            {
+                soundEffectSource.PlayOneShot(winSound);
             }
 
             winTextObject.SetActive(true);
@@ -127,6 +148,11 @@ public class PlayerController : MonoBehaviour
         {
             gameEnded = true;
 
+            if (soundEffectSource != null && crashSound != null)
+            {
+                soundEffectSource.PlayOneShot(crashSound);
+            }
+
             // Display the lose message.
             TextMeshProUGUI winText =
                 winTextObject.GetComponent<TextMeshProUGUI>();
@@ -139,12 +165,15 @@ public class PlayerController : MonoBehaviour
             winTextObject.SetActive(true);
 
             // Stop the player instead of destroying it.
-            movementX = 0;
-            movementY = 0;
+            movementX = 0f;
+            movementY = 0f;
 
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.isKinematic = true;
+
+            enabled = false;
+            
 
             Collider playerCollider = GetComponent<Collider>();
 
